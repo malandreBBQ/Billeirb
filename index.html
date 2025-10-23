@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Association Sportive - Accueil</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .hero h1 {
+            color: #667eea;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .info-card p {
+            color: #666;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="equipe.html">Notre Équipe</a></li>
+            <li><a href="historique.html">Historique des Tournois</a></li>
+            <li><a href="tournoi.html">Arbre de Tournoi</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>🏆 Bienvenue à notre Association</h1>
+            <p>Passion • Compétition • Excellence</p>
+            <a href="tournoi.html" class="cta-button">Voir le Tournoi en Cours</a>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>📋 Notre Mission</h3>
+                <p>Promouvoir l'esprit sportif et compétitif à travers l'organisation de tournois passionnants. Nous créons des moments inoubliables pour tous les participants.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>👥 Notre Équipe</h3>
+                <p>Une équipe dévouée de passionnés qui travaillent ensemble pour organiser les meilleurs événements. Découvrez les visages derrière l'association.</p>
+                <a href="equipe.html" class="cta-button">Rencontrer l'Équipe</a>
+            </div>
+
+            <div class="info-card">
+                <h3>🏅 Nos Tournois</h3>
+                <p>Consultez l'historique complet de nos tournois et découvrez les champions qui ont marqué notre histoire.</p>
+                <a href="historique.html" class="cta-button">Voir l'Historique</a>
+            </div>
+
+            <div class="info-card">
+                <h3>📢 Actualités</h3>
+                <p>Restez informé des prochains événements, inscriptions et annonces importantes de l'association.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>📞 Contact</h3>
+                <p>Des questions ? Envie de rejoindre l'association ? N'hésitez pas à nous contacter pour plus d'informations.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>🎯 Nos Valeurs</h3>
+                <p>Fair-play, respect, excellence et esprit d'équipe sont au cœur de tout ce que nous faisons.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Association Sportive - Tous droits réservés</p>
+    </footer>
+</body>
+</html>

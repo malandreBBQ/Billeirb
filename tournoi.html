@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbre de Tournoi - Association Sportive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .page-header h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-toggle {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .admin-btn {
+            background: #667eea;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .admin-controls {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .admin-controls.active {
+            display: grid;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-group label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .control-group input, .control-group select {
+            padding: 0.8rem;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .control-group input:focus, .control-group select:focus {
+            border-color: #764ba2;
+        }
+
+        .team-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .tournament-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .bracket {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            min-width: 100%;
+            padding: 2rem 0;
+        }
+
+        .round {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            min-height: 600px;
+        }
+
+        .round-title {
+            text-align: center;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .match {
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .team {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .team:last-child {
+            border-bottom: none;
+        }
+
+        .team:hover {
+            background: #e3f2fd;
+        }
+
+        .team.winner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .team.selected {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .team-name {
+            flex: 1;
+        }
+
+        .team-score {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-left: 1rem;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .connector {
+            width: 50px;
+            height: 2px;
+            background: #667eea;
+            margin: 0 -25px;
+            z-index: -1;
+        }
+
+        .empty-slot {
+            padding: 1rem;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+
+        .champion-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .champion-trophy {
+            font-size: 5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .champion-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            color: #666;
+        }
+
+        .info-message {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            color: #1976d2;
+        }
+
+        .score-input {
+            width: 60px;
+            padding: 0.3rem;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .bracket {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .round {
+                min-height: auto;
+            }
+
+            .connector {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="equipe.html">Notre Équipe</a></li>
+            <li><a href="historique.html">Historique des Tournois</a></li>
+            <li><a href="tournoi.html">Arbre de Tournoi</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>⚔️ Arbre de Tournoi</h1>
+            <p>Suivez la progression des équipes en direct</p>
+        </div>
+
+        <div class="admin-panel">
+            <div class="admin-toggle">
+                <button class="admin-btn" onclick="toggleAdminMode()">
+                    🔐 Mode Administrateur
+                </button>
+            </div>
+
+            <div class="admin-controls" id="adminControls">
+                <div class="control-group">
+                    <label for="numTeams">Nombre d'équipes:</label>
+                    <select id="numTeams" onchange="updateTeamInputs()">
+                        <option value="4">4 équipes</option>
+                        <option value="8" selected>8 équipes</option>
+                        <option value="16">16 équipes</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="tournamentName">Nom du tournoi:</label>
+                    <input type="text" id="tournamentName" placeholder="Ex: Tournoi d'Hiver 2025">
+                </div>
+
+                <div class="control-group">
+                    <label for="tournamentDate">Date:</label>
+                    <input type="date" id="tournamentDate">
+                </div>
+
+                <div class="info-message">
+                    <strong>Instructions:</strong> Configurez le tournoi ci-dessus, puis entrez les noms des équipes ci-dessous.
+                </div>
+
+                <div class="control-group" style="grid-column: 1 / -1;">
+                    <label>Noms des équipes:</label>
+                    <div class="team-inputs" id="teamInputs">
+                        <!-- Les inputs seront générés dynamiquement -->
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generateBracket()">
+                        🎲 Générer l'Arbre
+                    </button>
+                    <button class="btn btn-success" onclick="saveTournament()">
+                        💾 Sauvegarder
+                    </button>
+                    <button class="btn btn-danger" onclick="resetTournament()">
+                        🔄 Réinitialiser
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tournament-container">
+            <div id="bracketContainer">
+                <div class="info-message">
+                    Cliquez sur "Mode Administrateur" pour créer un nouveau tournoi, ou visualisez le tournoi en cours ci-dessous.
+                </div>
+            </div>
+            <div id="championSection"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Association Sportive - Tous droits réservés</p>
+    </footer>
+
+    <script>
+        let isAdminMode = false;
+        let tournamentData = {
+            teams: [],
+            matches: [],
+            rounds: []
+        };
+
+        // Charger un tournoi de démonstration
+        function loadDemoTournament() {
+            const demoTeams = [
+                'Les Titans', 'Les Guerriers', 'Les Faucons', 'Les Aigles',
+                'Les Champions', 'Les Warriors', 'Les Pumas', 'Les Légendes'
+            ];
+            
+            document.getElementById('numTeams').value = '8';
+            updateTeamInputs();
+            
+            demoTeams.forEach((team, index) => {
+                document.getElementById(`team${index}`).value = team;
+            });
+            
+            generateBracket();
+        }
+
+        function toggleAdminMode() {
+            isAdminMode = !isAdminMode;
+            const controls = document.getElementById('adminControls');
+            controls.classList.toggle('active');
+        }
+
+        function updateTeamInputs() {
+            const numTeams = parseInt(document.getElementById('numTeams').value);
+            const container = document.getElementById('teamInputs');
+            container.innerHTML = '';
+
+            for (let i = 0; i < numTeams; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `team${i}`;
+                input.placeholder = `Équipe ${i + 1}`;
+                input.className = 'control-group';
+                container.appendChild(input);
+            }
+        }
+
+        function generateBracket() {
+            const numTeams = parseInt(document.getElementById('numTeams').value);
+            const teams = [];
+
+            for (let i = 0; i < numTeams; i++) {
+                const teamName = document.getElementById(`team${i}`).value || `Équipe ${i + 1}`;
+                teams.push({ name: teamName, score: 0 });
+            }
+
+            tournamentData.teams = teams;
+            createBracket(teams);
+        }
+
+        function createBracket(teams) {
+            const container = document.getElementById('bracketContainer');
+            container.innerHTML = '';
+
+            const numRounds = Math.log2(teams.length);
+            const bracket = document.createElement('div');
+            bracket.className = 'bracket';
+
+            for (let round = 0; round < numRounds; round++) {
+                const roundDiv = document.createElement('div');
+                roundDiv.className = 'round';
+
+                const roundTitle = document.createElement('div');
+                roundTitle.className = 'round-title';
+                
+                if (round === numRounds - 1) {
+                    roundTitle.textContent = '🏆 FINALE';
+                } else if (round === numRounds - 2) {
+                    roundTitle.textContent = '⚡ DEMI-FINALES';
+                } else if (round === numRounds - 3) {
+                    roundTitle.textContent = '🔥 QUARTS DE FINALE';
+                } else {
+                    roundTitle.textContent = `TOUR ${round + 1}`;
+                }
+                
+                roundDiv.appendChild(roundTitle);
+
+                const matchesInRound = teams.length / Math.pow(2, round + 1);
+                
+                for (let match = 0; match < matchesInRound; match++) {
+                    const matchDiv = document.createElement('div');
+                    matchDiv.className = 'match';
+                    matchDiv.dataset.round = round;
+                    matchDiv.dataset.match = match;
+
+                    if (round === 0) {
+                        const team1Index = match * 2;
+                        const team2Index = match * 2 + 1;
+
+                        matchDiv.innerHTML = `
+                            <div class="team" onclick="selectWinner(${round}, ${match}, 0)">
+                                <span class="team-name">${teams[team1Index].name}</span>
+                                <span class="team-score">0</span>
+                            </div>
+                            <div class="team" onclick="selectWinner(${round}, ${match}, 1)">
+                                <span class="team-name">${teams[team2Index].name}</span>
+                                <span class="team-score">0</span>
+                            </div>
+                        `;
+                    } else {
+                        matchDiv.innerHTML = `
+                            <div class="team empty-slot">
+                                <span class="team-name">En attente...</span>
+                            </div>
+                            <div class="team empty-slot">
+                                <span class="team-name">En attente...</span>
+                            </div>
+                        `;
+                    }
+
+                    roundDiv.appendChild(matchDiv);
+                }
+
+                bracket.appendChild(roundDiv);
+            }
+
+            container.appendChild(bracket);
+        }
+
+        function selectWinner(round, matchIndex, teamIndex) {
+            if (!isAdminMode) {
+                alert('Activez le mode administrateur pour modifier les résultats.');
+                return;
+            }
+
+            const match = document.querySelector(`[data-round="${round}"][data-match="${matchIndex}"]`);
+            const teams = match.querySelectorAll('.team');
+            
+            // Retirer la classe winner de toutes les équipes du match
+            teams.forEach(team => team.classList.remove('winner'));
+            
+            // Ajouter la classe winner à l'équipe sélectionnée
+            teams[teamIndex].classList.add('winner');
+
+            // Obtenir le nom de l'équipe gagnante
+            const winnerName = teams[teamIndex].querySelector('.team-name').textContent;
+
+            // Mettre à jour le tour suivant
+            updateNextRound(round, matchIndex, winnerName);
+
+            // Vérifier si c'est la finale
+            if (round === Math.log2(tournamentData.teams.length) - 1) {
+                displayChampion(winnerName);
+            }
+        }
+
+        function updateNextRound(currentRound, currentMatch, winnerName) {
+            const nextRound = currentRound + 1;
+            const nextMatch = Math.floor(currentMatch / 2);
+            const position = currentMatch % 2;
+
+            const nextMatchElement = document.querySelector(`[data-round="${nextRound}"][data-match="${nextMatch}"]`);
+            
+            if (nextMatchElement) {
+                const teams = nextMatchElement.querySelectorAll('.team');
+                if (teams[position]) {
+                    teams[position].innerHTML = `
+                        <span class="team-name">${winnerName}</span>
+                        <span class="team-score">0</span>
+                    `;
+                    teams[position].classList.remove('empty-slot');
+                    teams[position].onclick = () => selectWinner(nextRound, nextMatch, position);
+                }
+            }
+        }
+
+        function displayChampion(championName) {
+            const championSection = document.getElementById('championSection');
+            championSection.innerHTML = `
+                <div class="champion-section">
+                    <div class="champion-trophy">🏆</div>
+                    <div class="champion-name">CHAMPION: ${championName}</div>
+                    <p style="margin-top: 1rem; font-size: 1.2rem;">Félicitations à l'équipe gagnante !</p>
+                </div>
+            `;
+        }
+
+        function saveTournament() {
+            const tournamentName = document.getElementById('tournamentName').value || 'Tournoi sans nom';
+            const tournamentDate = document.getElementById('tournamentDate').value || new Date().toISOString().split('T')[0];
+
+            const data = {
+                name: tournamentName,
+                date: tournamentDate,
+                teams: tournamentData.teams,
+                timestamp: new Date().toISOString()
+            };
+
+            // Dans une vraie application, on enverrait ça à un serveur
+            localStorage.setItem('currentTournament', JSON.stringify(data));
+            alert('Tournoi sauvegardé avec succès !');
+        }
+
+        function resetTournament() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser le tournoi ?')) {
+                location.reload();
+            }
+        }
+
+        // Initialisation
+        window.onload = function() {
+            updateTeamInputs();
+            
+            // Charger le tournoi sauvegardé s'il existe
+            const saved = localStorage.getItem('currentTournament');
+            if (saved) {
+                // On pourrait restaurer le tournoi ici
+            } else {
+                // Charger un tournoi de démo
+                loadDemoTournament();
+            }
+        };
+    </script>
+</body>
+</html>
