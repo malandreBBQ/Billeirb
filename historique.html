@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des Tournois - Association Sportive</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="equipe.html">Notre Équipe</a></li>
+            <li><a href="historique.html">Historique des Tournois</a></li>
+            <li><a href="tournoi.html">Arbre de Tournoi</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Historique des Tournois</h1>
+            <p>Tous nos champions à travers les années</p>
+        </div>
+
+        <div class="filters">
+            <label for="yearFilter">Année:</label>
+            <select id="yearFilter">
+                <option value="all">Toutes les années</option>
+            </select>
+
+            <label for="seasonFilter">Saison:</label>
+            <select id="seasonFilter">
+                <option value="all">Toutes les saisons</option>
+                <option value="Printemps">Printemps</option>
+                <option value="Été">Été</option>
+                <option value="Automne">Automne</option>
+                <option value="Hiver">Hiver</option>
+            </select>
+
+            <label for="searchInput">Rechercher:</label>
+            <input type="text" id="searchInput" placeholder="Nom d'équipe...">
+        </div>
+
+        <div class="stats-section">
+            <h2>Statistiques Globales</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+
+        <div class="tournament-timeline" id="tournamentTimeline"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Association Sportive - Tous droits réservés</p>
+    </footer>
+
+    <script>
+        const tournaments = [
+            {
+                title: "Tournoi d'Hiver 2025",
+                date: "Janvier 2025",
+                season: "Hiver",
+                year: 2025,
+                winner: { name: "Les Titans", photo: null, emoji: "🦁" },
+                secondPlace: { name: "Les Guerriers", photo: null, emoji: "⚔️" },
+                thirdPlace: { name: "Les Champions", photo: null, emoji: "👑" },
+                participants: 16,
+                matches: 15,
+                location: "Stade Central"
+            },
+            {
+                title: "Tournoi d'Automne 2024",
+                date: "Octobre 2024",
+                season: "Automne",
+                year: 2024,
+                winner: { name: "Les Faucons", photo: null, emoji: "🦅" },
+                secondPlace: { name: "Les Aigles", photo: null, emoji: "🦅" },
+                thirdPlace: { name: "Les Pumas", photo: null, emoji: "🐆" },
+                participants: 12,
+                matches: 11,
+                location: "Complexe Sportif Nord"
+            },
+            {
+                title: "Tournoi d'Été 2024",
+                date: "Juillet 2024",
+                season: "Été",
+                year: 2024,
+                winner: { name: "Les Warriors", photo: null, emoji: "⚡" },
+                secondPlace: { name: "Les Titans", photo: null, emoji: "🦁" },
+                thirdPlace: { name: "Les Ninjas", photo: null, emoji: "🥷" },
+                participants: 16,
+                matches: 15,
+                location: "Arena du Soleil"
+            },
+            {
+                title: "Tournoi du Printemps 2024",
+                date: "Avril 2024",
+                season: "Printemps",
+                year: 2024,
+                winner: { name: "Les Champions", photo: null, emoji: "👑" },
+                secondPlace: { name: "Les Faucons", photo: null, emoji: "🦅" },
+                thirdPlace: { name: "Les Légendes", photo: null, emoji: "⭐" },
+                participants: 14,
+                matches: 13,
+                location: "Stade des Fleurs"
+            },
+            {
+                title: "Tournoi d'Hiver 2024",
+                date: "Janvier 2024",
+                season: "Hiver",
+                year: 2024,
+                winner: { name: "Les Aigles", photo: null, emoji: "🦅" },
+                secondPlace: { name: "Les Warriors", photo: null, emoji: "⚡" },
+                thirdPlace: { name: "Les Titans", photo: null, emoji: "🦁" },
+                participants: 12,
+                matches: 11,
+                location: "Palais des Glaces"
+            },
+            {
+                title: "Tournoi d'Automne 2023",
+                date: "Octobre 2023",
+                season: "Automne",
+                year: 2023,
+                winner: { name: "Les Guerriers", photo: null, emoji: "⚔️" },
+                secondPlace: { name: "Les Champions", photo: null, emoji: "👑" },
+                thirdPlace: { name: "Les Faucons", photo: null, emoji: "🦅" },
+                participants: 16,
+                matches: 15,
+                location: "Stade Municipal"
+            },
+            {
+                title: "Tournoi d'Été 2023",
+                date: "Juillet 2023",
+                season: "Été",
+                year: 2023,
+                winner: { name: "Les Titans", photo: null, emoji: "🦁" },
+                secondPlace: { name: "Les Pumas", photo: null, emoji: "🐆" },
+                thirdPlace: { name: "Les Warriors", photo: null, emoji: "⚡" },
+                participants: 14,
+                matches: 13,
+                location: "Centre Sportif Sud"
+            },
+            {
+                title: "Tournoi du Printemps 2023",
+                date: "Avril 2023",
+                season: "Printemps",
+                year: 2023,
+                winner: { name: "Les Légendes", photo: null, emoji: "⭐" },
+                secondPlace: { name: "Les Ninjas", photo: null, emoji: "🥷" },
+                thirdPlace: { name: "Les Aigles", photo: null, emoji: "🦅" },
+                participants: 12,
+                matches: 11,
+                location: "Complexe Olympique"
+            }
+        ];
+
+        function calculateStats() {
+            const totalTournaments = tournaments.length;
+            const totalParticipants = tournaments.reduce((sum, t) => sum + t.participants, 0);
+            const totalMatches = tournaments.reduce((sum, t) => sum + t.matches, 0);
+            
+            const winCounts = {};
+            tournaments.forEach(t => {
+                winCounts[t.winner.name] = (winCounts[t.winner.name] || 0) + 1;
+            });
+            const mostWins = Math.max(...Object.values(winCounts));
+            const topTeam = Object.keys(winCounts).find(team => winCounts[team] === mostWins);
+
+            return { totalTournaments, totalParticipants, totalMatches, topTeam, mostWins };
+        }
+
+        function displayStats() {
+            const stats = calculateStats();
+            const statsGrid = document.getElementById('statsGrid');
+            
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${stats.totalTournaments}</div>
+                    <div class="stat-label">Tournois Organisés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.totalMatches}</div>
+                    <div class="stat-label">Matchs Disputés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.totalParticipants}</div>
+                    <div class="stat-label">Participants Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.topTeam}</div>
+                    <div class="stat-label">Équipe la Plus Titrée (${stats.mostWins} victoires)</div>
+                </div>
+            `;
+        }
+
+        function createPodium(tournament, tournamentIndex) {
+            const places = [
+                { position: 2, team: tournament.secondPlace, medal: '', class: 'place-2', hasPhoto: false },
+                { position: 1, team: tournament.winner, medal: '', class: 'place-1', hasPhoto: true },
+                { position: 3, team: tournament.thirdPlace, medal: '', class: 'place-3', hasPhoto: false }
+            ];
+
+            return `
+                <div class="podium-3d">
+                    ${places.map(place => `
+                        <div class="podium-place ${place.class}">
+                            ${place.hasPhoto ? `
+                                <div class="podium-photo" id="photo-${tournamentIndex}-${place.position}">
+                                    ${place.team.photo 
+                                        ? `<img src="${place.team.photo}" alt="${place.team.name}">`
+                                        : `<span class="photo-placeholder">${place.team.emoji}</span>`
+                                    }
+                                    <span class="podium-medal">${place.medal}</span>
+                                    <button class="upload-photo-btn" onclick="uploadPhoto(${tournamentIndex}, ${place.position})" title="Ajouter une photo">
+                                        
+                                    </button>
+                                    <input type="file" class="photo-input" id="input-${tournamentIndex}-${place.position}" accept="image/*" onchange="handlePhotoUpload(event, ${tournamentIndex}, ${place.position})">
+                                </div>
+                            ` : `
+                                <div class="podium-medal-only">${place.medal}</div>
+                            `}
+                            <div class="podium-stand">
+                                <div class="place-number">${place.position}</div>
+                                <div class="place-team-name">${place.team.name}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function displayTournaments(filteredTournaments = tournaments) {
+            const timeline = document.getElementById('tournamentTimeline');
+            timeline.innerHTML = '';
+
+            filteredTournaments.forEach((tournament, index) => {
+                const card = document.createElement('div');
+                card.className = 'tournament-card';
+                
+                card.innerHTML = `
+                    <div class="tournament-header">
+                        <div class="tournament-title">${tournament.title}</div>
+                        <div class="tournament-date">${tournament.date}</div>
+                    </div>
+                    
+                    <div class="winner-section">
+                        <div class="winner-header">
+                            <div class="winner-trophy"></div>
+                            <div class="winner-name">Champion: ${tournament.winner.name}</div>
+                        </div>
+                        
+                        ${createPodium(tournament, index)}
+                    </div>
+                    
+                    <div class="tournament-details">
+                        <div class="detail-item">
+                            <span class="detail-icon"></span>
+                            <span>${tournament.participants} équipes</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"></span>
+                            <span>${tournament.matches} matchs</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"></span>
+                            <span>${tournament.location}</span>
+                        </div>
+                    </div>
+                `;
+
+                timeline.appendChild(card);
+            });
+        }
+
+        function uploadPhoto(tournamentIndex, position) {
+            const input = document.getElementById(`input-${tournamentIndex}-${position}`);
+            input.click();
+        }
+
+        function handlePhotoUpload(event, tournamentIndex, position) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const photoDiv = document.getElementById(`photo-${tournamentIndex}-${position}`);
+                    
+                    const img = photoDiv.querySelector('img') || document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = "Photo d'équipe";
+                    
+                    if (!photoDiv.querySelector('img')) {
+                        const placeholder = photoDiv.querySelector('.photo-placeholder');
+                        if (placeholder) {
+                            placeholder.remove();
+                        }
+                        photoDiv.insertBefore(img, photoDiv.firstChild);
+                    }
+
+                    let teamToUpdate;
+                    if (position === 1) teamToUpdate = tournaments[tournamentIndex].winner;
+                    else if (position === 2) teamToUpdate = tournaments[tournamentIndex].secondPlace;
+                    else teamToUpdate = tournaments[tournamentIndex].thirdPlace;
+                    
+                    teamToUpdate.photo = e.target.result;
+                    localStorage.setItem('tournaments', JSON.stringify(tournaments));
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function populateYearFilter() {
+            const yearFilter = document.getElementById('yearFilter');
+            const years = [...new Set(tournaments.map(t => t.year))].sort((a, b) => b - a);
+            
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+        }
+
+        function filterTournaments() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const seasonFilter = document.getElementById('seasonFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = tournaments;
+
+            if (yearFilter !== 'all') {
+                filtered = filtered.filter(t => t.year == yearFilter);
+            }
+
+            if (seasonFilter !== 'all') {
+                filtered = filtered.filter(t => t.season === seasonFilter);
+            }
+
+            if (searchInput) {
+                filtered = filtered.filter(t => 
+                    t.winner.name.toLowerCase().includes(searchInput) ||
+                    t.secondPlace.name.toLowerCase().includes(searchInput) ||
+                    t.thirdPlace.name.toLowerCase().includes(searchInput)
+                );
+            }
+
+            displayTournaments(filtered);
+        }
+
+        document.getElementById('yearFilter').addEventListener('change', filterTournaments);
+        document.getElementById('seasonFilter').addEventListener('change', filterTournaments);
+        document.getElementById('searchInput').addEventListener('input', filterTournaments);
+
+        window.onload = function() {
+            const savedTournaments = localStorage.getItem('tournaments');
+            if (savedTournaments) {
+                const parsed = JSON.parse(savedTournaments);
+                parsed.forEach((saved, index) => {
+                    if (tournaments[index]) {
+                        if (saved.winner.photo) tournaments[index].winner.photo = saved.winner.photo;
+                        if (saved.secondPlace.photo) tournaments[index].secondPlace.photo = saved.secondPlace.photo;
+                        if (saved.thirdPlace.photo) tournaments[index].thirdPlace.photo = saved.thirdPlace.photo;
+                    }
+                });
+            }
+
+            populateYearFilter();
+            displayStats();
+            displayTournaments();
+        };
+    </script>
+</body>
+</html>

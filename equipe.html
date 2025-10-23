@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notre Équipe - Association Sportive</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="equipe.html">Notre Équipe</a></li>
+            <li><a href="historique.html">Historique des Tournois</a></li>
+            <li><a href="tournoi.html">Arbre de Tournoi</a></li>
+        </ul>
+    </nav>
+
+    <div class="container large">
+        <div class="page-header">
+            <h1>Notre Équipe</h1>
+            <p>Les visages qui font vivre l'association</p>
+        </div>
+
+        <div class="team-grid" id="teamGrid">
+            <!-- Les membres seront générés ici -->
+        </div>
+
+        <div class="admin-section">
+            <h2>Section Administration</h2>
+            <p>Pour ajouter ou modifier les photos des membres, utilisez le bouton ci-dessous :</p>
+            <label for="photoUpload" class="upload-btn">Ajouter/Modifier une Photo</label>
+            <input type="file" id="photoUpload" class="file-input" accept="image/*">
+            
+            <div class="note">
+                <strong>Note:</strong> Pour une utilisation réelle, les photos peuvent être ajoutées en modifiant le code JavaScript ou en intégrant un système de gestion de contenu. Les photos doivent être placées dans un dossier "images" et référencées dans le tableau JavaScript ci-dessous.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Association Sportive - Tous droits réservés</p>
+    </footer>
+
+    <script>
+        // Base de données des membres de l'équipe
+        // Pour ajouter des vraies photos, remplacez les emojis par des chemins d'images
+        const teamMembers = [
+            {
+                name: "Sophie Dubois",
+                role: "Présidente",
+                description: "Passionnée de sport depuis toujours, elle dirige l'association avec enthousiasme.",
+                emoji: "👩‍💼",
+                photo: null // Remplacer par "images/sophie.jpg" par exemple
+            },
+            {
+                name: "Marc Lefebvre",
+                role: "Vice-Président",
+                description: "Expert en organisation d'événements sportifs depuis 10 ans.",
+                emoji: "👨‍💼",
+                photo: null
+            },
+            {
+                name: "Julie Martin",
+                role: "Trésorière",
+                description: "Gère les finances de l'association avec rigueur et transparence.",
+                emoji: "👩‍💻",
+                photo: null
+            },
+            {
+                name: "Thomas Bernard",
+                role: "Secrétaire",
+                description: "Assure la communication et la coordination des membres.",
+                emoji: "👨‍💻",
+                photo: null
+            },
+            {
+                name: "Emma Rousseau",
+                role: "Responsable Événements",
+                description: "Organise tous nos tournois avec créativité et professionnalisme.",
+                emoji: "👩‍🎨",
+                photo: null
+            },
+            {
+                name: "Lucas Petit",
+                role: "Responsable Communication",
+                description: "Gère notre présence sur les réseaux sociaux et notre image.",
+                emoji: "👨‍🎨",
+                photo: null
+            },
+            {
+                name: "Camille Durand",
+                role: "Coordinatrice Bénévoles",
+                description: "Mobilise et coordonne notre équipe de bénévoles dévoués.",
+                emoji: "👩‍🏫",
+                photo: null
+            },
+            {
+                name: "Antoine Moreau",
+                role: "Responsable Technique",
+                description: "S'occupe de tout l'aspect technique et logistique des événements.",
+                emoji: "👨‍🔧",
+                photo: null
+            },
+            {
+                name: "Sarah Lambert",
+                role: "Responsable Partenariats",
+                description: "Développe nos relations avec les sponsors et partenaires.",
+                emoji: "👩‍💼",
+                photo: null
+            },
+            {
+                name: "Pierre Fournier",
+                role: "Conseiller Sportif",
+                description: "Apporte son expertise pour améliorer nos compétitions.",
+                emoji: "👨‍🏫",
+                photo: null
+            }
+        ];
+
+        // Générer les cartes des membres
+        function displayTeam() {
+            const teamGrid = document.getElementById('teamGrid');
+            teamGrid.innerHTML = '';
+
+            teamMembers.forEach(member => {
+                const memberCard = document.createElement('div');
+                memberCard.className = 'team-member';
+                
+                const photoHTML = member.photo 
+                    ? `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 300px; object-fit: cover;">`
+                    : `<div class="member-photo">${member.emoji}</div>`;
+
+                memberCard.innerHTML = `
+                    ${photoHTML}
+                    <div class="member-info">
+                        <div class="member-name">${member.name}</div>
+                        <div class="member-role">${member.role}</div>
+                        <div class="member-description">${member.description}</div>
+                    </div>
+                `;
+
+                teamGrid.appendChild(memberCard);
+            });
+        }
+
+        // Gestionnaire d'upload de photo (simulation)
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                alert('Photo sélectionnée ! Dans une version complète, cette photo serait uploadée sur le serveur.');
+            }
+        });
+
+        // Afficher l'équipe au chargement
+        displayTeam();
+    </script>
+</body>
+</html>

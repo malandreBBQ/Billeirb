@@ -1,0 +1,993 @@
+/* ===================================
+   STYLES GLOBAUX
+   =================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    line-height: 1.7;
+    color: #e5e7eb;
+    background: #18181b;
+    min-height: 100vh;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+/* ===================================
+   NAVBAR
+   =================================== */
+
+.navbar {
+    background: #27272a;
+    padding: 1.5rem 3rem;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid #3f3f46;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #a1a1aa;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+    position: relative;
+    letter-spacing: -0.01em;
+}
+
+.navbar a:hover {
+    color: #fbbf24;
+}
+
+.navbar a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fbbf24;
+    transition: width 0.3s ease;
+}
+
+.navbar a:hover::after {
+    width: 100%;
+}
+
+/* ===================================
+   CONTAINER & LAYOUT
+   =================================== */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.page-header {
+    background: transparent;
+    padding: 3rem 0;
+    margin: 0 0 4rem 0;
+    text-align: left;
+    border-bottom: 1px solid #3f3f46;
+}
+
+.page-header h1 {
+    color: #fafafa;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.03em;
+}
+
+.page-header p {
+    color: #a1a1aa;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+/* ===================================
+   FOOTER
+   =================================== */
+
+footer {
+    background: #27272a;
+    text-align: center;
+    padding: 3rem 2rem;
+    margin-top: 6rem;
+    border-top: 1px solid #3f3f46;
+}
+
+footer p {
+    color: #71717a;
+    font-size: 0.9rem;
+    letter-spacing: -0.01em;
+}
+
+/* ===================================
+   PAGE ACCUEIL - HERO
+   =================================== */
+
+.hero {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 5rem 4rem;
+    margin: 0 0 4rem 0;
+    text-align: center;
+}
+
+.hero h1 {
+    color: #fafafa;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    color: #a1a1aa;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+/* ===================================
+   PAGE ACCUEIL - GRILLES
+   =================================== */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.info-card {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 2.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.info-card:hover {
+    border-color: #fbbf24;
+    transform: translateY(-2px);
+    background: #2d2d30;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+.info-card h3 {
+    color: #fbbf24;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.info-card p {
+    color: #a1a1aa;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+/* ===================================
+   BOUTONS
+   =================================== */
+
+.cta-button {
+    display: inline-block;
+    background: #fbbf24;
+    color: #18181b;
+    padding: 0.875rem 2rem;
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 1.5rem;
+    transition: all 0.2s ease;
+    border: 2px solid #fbbf24;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.cta-button:hover {
+    background: transparent;
+    color: #fbbf24;
+}
+
+.btn {
+    padding: 0.875rem 1.75rem;
+    border: 2px solid transparent;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+}
+
+.btn-primary {
+    background: #fbbf24;
+    color: #18181b;
+    border-color: #fbbf24;
+}
+
+.btn-primary:hover {
+    background: transparent;
+    color: #fbbf24;
+}
+
+.btn-success {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+.btn-success:hover {
+    background: transparent;
+    color: #10b981;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+}
+
+.btn-danger:hover {
+    background: transparent;
+    color: #ef4444;
+}
+
+/* ===================================
+   PAGE ÉQUIPE - GRILLE
+   =================================== */
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.team-member {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.team-member:hover {
+    border-color: #fbbf24;
+    transform: translateY(-4px);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+.member-photo {
+    width: 100%;
+    height: 320px;
+    background: #2d2d30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: #4b5563;
+    border-bottom: 1px solid #3f3f46;
+}
+
+.member-info {
+    padding: 2rem;
+    text-align: left;
+}
+
+.member-name {
+    color: #fafafa;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.member-role {
+    color: #a1a1aa;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.member-description {
+    color: #a1a1aa;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ===================================
+   PAGE ÉQUIPE - ADMIN
+   =================================== */
+
+.admin-section {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 2.5rem;
+    margin: 3rem 0;
+}
+
+.admin-section h2 {
+    color: #fafafa;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-btn {
+    display: inline-block;
+    background: #fafafa;
+    color: #18181b;
+    padding: 0.875rem 1.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid #fafafa;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.upload-btn:hover {
+    background: transparent;
+    color: #fafafa;
+}
+
+.note {
+    background: #2d2d30;
+    border-left: 3px solid #fbbf24;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    color: #a1a1aa;
+    font-size: 0.95rem;
+}
+
+/* ===================================
+   PAGE HISTORIQUE - FILTRES
+   =================================== */
+
+.filters {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 2rem;
+    margin: 0 0 3rem 0;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filters label {
+    color: #fafafa;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.filters select, .filters input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #3f3f46;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    background: #18181b;
+    color: #e5e7eb;
+}
+
+.filters select:focus, .filters input:focus {
+    border-color: #fafafa;
+}
+
+/* ===================================
+   PAGE HISTORIQUE - TIMELINE
+   =================================== */
+
+.tournament-timeline {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.tournament-card {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 3rem;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.tournament-card:hover {
+    border-color: #fbbf24;
+    transform: translateX(4px);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+.tournament-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #3f3f46;
+}
+
+.tournament-title {
+    color: #fafafa;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.tournament-date {
+    background: #2d2d30;
+    color: #a1a1aa;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tournament-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #3f3f46;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #a1a1aa;
+    font-size: 0.95rem;
+}
+
+.detail-icon {
+    color: #fafafa;
+    font-size: 1.25rem;
+}
+
+/* ===================================
+   PAGE HISTORIQUE - STATISTIQUES
+   =================================== */
+
+.stats-section {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 3rem;
+    margin: 0 0 3rem 0;
+}
+
+.stats-section h2 {
+    color: #fafafa;
+    margin-bottom: 2rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1.75rem;
+    letter-spacing: -0.02em;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.stat-card {
+    background: #2d2d30;
+    border: 1px solid #3f3f46;
+    color: #fafafa;
+    padding: 2rem;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: #fafafa;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* ===================================
+   PAGE HISTORIQUE - PODIUM 3D
+   =================================== */
+
+.winner-section {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 3rem;
+    margin: 2rem 0;
+    color: #fafafa;
+}
+
+.winner-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.winner-trophy {
+    font-size: 3rem;
+    display: inline-block;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.winner-name {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 1rem 0;
+    letter-spacing: -0.02em;
+}
+
+.podium-3d {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding: 3rem 0;
+}
+
+.podium-place {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.podium-photo {
+    width: 120px;
+    height: 120px;
+    border: 2px solid #3f3f46;
+    margin-bottom: 1.5rem;
+    background: #2d2d30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Photo rectangulaire pour le premier - FORMAT PAYSAGE */
+.place-1 .podium-photo {
+    width: 320px;
+    height: 200px;
+    border-color: #fbbf24;
+    border-width: 3px;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+}
+
+.podium-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.podium-photo .photo-placeholder {
+    font-size: 3rem;
+    color: #4b5563;
+}
+
+.podium-medal {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    animation: spin 3s ease-in-out infinite;
+}
+
+/* Médaille seule pour 2e et 3e places */
+.podium-medal-only {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+}
+
+@keyframes spin {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+}
+
+.podium-stand {
+    background: #2d2d30;
+    border: 1px solid #3f3f46;
+    padding: 2rem 2.5rem;
+    text-align: center;
+    min-width: 160px;
+    position: relative;
+}
+
+.place-1 .podium-stand {
+    height: 180px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-color: #fbbf24;
+}
+
+.place-2 .podium-stand {
+    height: 140px;
+    background: #2d2d30;
+}
+
+.place-3 .podium-stand {
+    height: 100px;
+    background: #2d2d30;
+}
+
+.place-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.08);
+    letter-spacing: -0.03em;
+}
+
+.place-1 .place-number {
+    color: rgba(0,0,0,0.1);
+}
+
+.place-team-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 0.75rem;
+    color: #a1a1aa;
+    letter-spacing: -0.01em;
+}
+
+.place-1 .place-team-name {
+    color: #18181b;
+}
+
+/* Bouton pour uploader une photo */
+.upload-photo-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: #fafafa;
+    color: #18181b;
+    border: none;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.upload-photo-btn:hover {
+    background: #e5e7eb;
+}
+
+.photo-input {
+    display: none;
+}
+
+/* ===================================
+   PAGE TOURNOI - ADMIN PANEL
+   =================================== */
+
+.admin-panel {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 3rem;
+    margin: 0 0 3rem 0;
+}
+
+.admin-toggle {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.admin-btn {
+    background: #fafafa;
+    color: #18181b;
+    padding: 1rem 2.5rem;
+    border: 2px solid #fafafa;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+}
+
+.admin-btn:hover {
+    background: transparent;
+    color: #fafafa;
+}
+
+.admin-controls {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.admin-controls.active {
+    display: grid;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.control-group label {
+    color: #fafafa;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.control-group input, .control-group select {
+    padding: 0.875rem 1rem;
+    border: 1px solid #3f3f46;
+    font-size: 0.95rem;
+    outline: none;
+    background: #18181b;
+    color: #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.control-group input:focus, .control-group select:focus {
+    border-color: #fafafa;
+}
+
+.team-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.info-message {
+    background: #2d2d30;
+    border-left: 3px solid #fafafa;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    color: #a1a1aa;
+    font-size: 0.95rem;
+}
+
+/* ===================================
+   PAGE TOURNOI - BRACKET
+   =================================== */
+
+.tournament-container {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    padding: 3rem;
+    margin: 0 0 3rem 0;
+    overflow-x: auto;
+}
+
+.bracket {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-width: 100%;
+    padding: 3rem 0;
+}
+
+.round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 600px;
+}
+
+.round-title {
+    text-align: center;
+    color: #fafafa;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.match {
+    background: #2d2d30;
+    border: 1px solid #3f3f46;
+    margin: 1rem 0;
+    overflow: hidden;
+    min-width: 220px;
+    transition: all 0.2s ease;
+}
+
+.match:hover {
+    border-color: #fbbf24;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.15);
+}
+
+.team {
+    padding: 1.25rem;
+    border-bottom: 1px solid #3f3f46;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #27272a;
+}
+
+.team:last-child {
+    border-bottom: none;
+}
+
+.team:hover {
+    background: #2d2d30;
+}
+
+.team.winner {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #18181b;
+    font-weight: 600;
+}
+
+.team.selected {
+    background: #fef3c7;
+    border-left: 3px solid #f59e0b;
+    color: #18181b;
+}
+
+.team-name {
+    flex: 1;
+    font-size: 0.95rem;
+}
+
+.team-score {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-left: 1rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.connector {
+    width: 50px;
+    height: 2px;
+    background: #3f3f46;
+    margin: 0 -25px;
+    z-index: -1;
+}
+
+.empty-slot {
+    padding: 1.25rem;
+    text-align: center;
+    color: #4b5563;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.champion-section {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 3rem;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #18181b;
+}
+
+.champion-trophy {
+    font-size: 5rem;
+    animation: bounce 2s infinite;
+}
+
+.champion-name {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.score-input {
+    width: 60px;
+    padding: 0.5rem;
+    border: 1px solid #3f3f46;
+    background: #18181b;
+    color: #e5e7eb;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media (max-width: 1200px) {
+    .bracket {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .round {
+        min-height: auto;
+    }
+
+    .connector {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .podium-3d {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .podium-place {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+    }
+
+    .podium-stand {
+        width: 60%;
+        height: 80px !important;
+    }
+
+    .place-1 .podium-photo {
+        width: 200px;
+        height: 130px;
+    }
+}
