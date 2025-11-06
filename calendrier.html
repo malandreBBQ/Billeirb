@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier des Événements - Association Sportive</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="equipe.html">Notre Équipe</a></li>
+            <li><a href="calendrier.html">Calendrier</a></li>
+            <li><a href="historique.html">Historique des Tournois</a></li>
+            <li><a href="tournoi.html">Arbre de Tournoi</a></li>
+        </ul>
+    </nav>
+
+    <div class="container large">
+        <div class="page-header animate-on-scroll">
+            <h1>Calendrier des Événements</h1>
+            <p>Restez informé de tous nos événements à venir</p>
+        </div>
+
+        <!-- Compte à rebours -->
+        <div class="countdown-section animate-on-scroll animate-delay-1" id="countdownSection">
+            <h2>Prochain Événement</h2>
+            <div class="countdown-event-name" id="nextEventName">Tournoi d'Hiver 2025</div>
+            <div class="countdown-timer" id="countdownTimer">
+                <div class="countdown-block">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">Jours</div>
+                </div>
+                <div class="countdown-block">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">Heures</div>
+                </div>
+                <div class="countdown-block">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-block">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">Secondes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des événements -->
+        <div class="events-grid" id="eventsGrid">
+            <!-- Les événements seront générés ici -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Association Sportive - Tous droits réservés</p>
+    </footer>
+
+    <script>
+        // Base de données des événements
+        const events = [
+            {
+                id: 1,
+                name: "Tournoi d'Hiver 2025",
+                date: "2025-12-15",
+                time: "14:00",
+                location: "Complexe Sportif Municipal",
+                description: "Le grand tournoi d'hiver qui rassemble les meilleures équipes de la région pour une compétition acharnée.",
+                participants: "16 équipes",
+                status: "upcoming"
+            },
+            {
+                id: 2,
+                name: "Coupe de Printemps",
+                date: "2025-04-20",
+                time: "10:00",
+                location: "Stade Central",
+                description: "Tournoi amical pour célébrer le retour du beau temps avec de nouvelles équipes.",
+                participants: "8 équipes",
+                status: "upcoming"
+            },
+            {
+                id: 3,
+                name: "Championnat d'Été",
+                date: "2025-07-10",
+                time: "09:00",
+                location: "Arena Sportive",
+                description: "Le championnat estival qui déterminera le champion de la saison.",
+                participants: "32 équipes",
+                status: "upcoming"
+            },
+            {
+                id: 4,
+                name: "Tournoi de Noël",
+                date: "2024-12-25",
+                time: "15:00",
+                location: "Complexe Sportif",
+                description: "Événement festif de fin d'année avec animations et surprises.",
+                participants: "12 équipes",
+                status: "completed"
+            }
+        ];
+
+        // Fonction pour calculer le compte à rebours
+        function updateCountdown() {
+            // Trouver le prochain événement
+            const now = new Date().getTime();
+            const upcomingEvents = events
+                .filter(e => new Date(e.date + ' ' + e.time).getTime() > now)
+                .sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
+
+            if (upcomingEvents.length === 0) {
+                document.getElementById('countdownSection').innerHTML = `
+                    <h2>Aucun événement à venir</h2>
+                    <p style="margin-top: 1rem; font-size: 1.2rem;">Restez à l'écoute pour de nouveaux tournois !</p>
+                `;
+                return;
+            }
+
+            const nextEvent = upcomingEvents[0];
+            document.getElementById('nextEventName').textContent = nextEvent.name;
+
+            const eventDate = new Date(nextEvent.date + ' ' + nextEvent.time).getTime();
+
+            const interval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = eventDate - now;
+
+                if (distance < 0) {
+                    clearInterval(interval);
+                    document.getElementById('countdownTimer').innerHTML = `
+                        <p style="font-size: 1.5rem; font-weight: 600;">L'événement a commencé !</p>
+                    `;
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        // Fonction pour formater la date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('fr-FR', options);
+        }
+
+        // Fonction pour afficher les événements
+        function displayEvents() {
+            const eventsGrid = document.getElementById('eventsGrid');
+            eventsGrid.innerHTML = '';
+
+            // Trier les événements par date
+            const sortedEvents = [...events].sort((a, b) =>
+                new Date(b.date) - new Date(a.date)
+            );
+
+            sortedEvents.forEach((event, index) => {
+                const eventCard = document.createElement('div');
+                eventCard.className = `event-card animate-on-scroll animate-delay-${Math.min(index + 2, 6)}`;
+
+                const statusText = {
+                    'upcoming': 'À venir',
+                    'ongoing': 'En cours',
+                    'completed': 'Terminé'
+                };
+
+                eventCard.innerHTML = `
+                    <div class="event-date-badge">${formatDate(event.date)}</div>
+                    <h3>${event.name}</h3>
+                    <p>${event.description}</p>
+                    <div class="event-details">
+                        <div class="event-detail-item">
+                            <span class="event-detail-icon">🕐</span>
+                            <span>${event.time}</span>
+                        </div>
+                        <div class="event-detail-item">
+                            <span class="event-detail-icon">📍</span>
+                            <span>${event.location}</span>
+                        </div>
+                        <div class="event-detail-item">
+                            <span class="event-detail-icon">👥</span>
+                            <span>${event.participants}</span>
+                        </div>
+                    </div>
+                    <div class="event-status ${event.status}">
+                        ${statusText[event.status]}
+                    </div>
+                `;
+
+                eventsGrid.appendChild(eventCard);
+            });
+        }
+
+        // Initialisation
+        window.onload = function() {
+            updateCountdown();
+            displayEvents();
+        };
+    </script>
+</body>
+</html>
