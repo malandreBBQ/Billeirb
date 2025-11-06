@@ -62,6 +62,124 @@
 
     <footer>
         <p>&copy; 2025 Association Sportive - Tous droits réservés</p>
+        <span class="admin-badge" id="adminBadge" title="Administration">⚙️</span>
     </footer>
+
+    <!-- Modal de connexion admin discrète -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <span class="admin-modal-close" onclick="closeAdminModal()">&times;</span>
+            <h3>Connexion Administrateur</h3>
+            <div class="form-group">
+                <label for="adminUser">Identifiant:</label>
+                <input type="text" id="adminUser" placeholder="Login">
+            </div>
+            <div class="form-group">
+                <label for="adminPass">Mot de passe:</label>
+                <input type="password" id="adminPass" placeholder="Mot de passe">
+            </div>
+            <div id="adminError" class="error-message"></div>
+            <div class="admin-modal-actions">
+                <button class="btn btn-primary" onclick="loginAdmin()">Se connecter</button>
+                <button class="btn btn-secondary" onclick="closeAdminModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicateur de connexion admin -->
+    <div class="admin-indicator" id="adminIndicator">
+        <span>👤 Admin connecté</span>
+        <button class="btn-logout" onclick="logoutAdmin()">Déconnexion</button>
+    </div>
+
+    <script>
+        // Gestion de l'authentification admin
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'caca'
+        };
+
+        // Vérifier si l'utilisateur est déjà connecté
+        function checkAdminSession() {
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            if (isAdmin) {
+                document.getElementById('adminIndicator').classList.add('show');
+                document.getElementById('adminBadge').style.color = '#fbbf24';
+            }
+        }
+
+        // Ouvrir la modal de connexion
+        document.getElementById('adminBadge').addEventListener('click', function() {
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            if (!isAdmin) {
+                document.getElementById('adminModal').style.display = 'flex';
+                document.getElementById('adminUser').focus();
+            }
+        });
+
+        // Fermer la modal
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPass').value = '';
+            document.getElementById('adminError').textContent = '';
+        }
+
+        // Connexion admin
+        function loginAdmin() {
+            const username = document.getElementById('adminUser').value;
+            const password = document.getElementById('adminPass').value;
+            const errorDiv = document.getElementById('adminError');
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                localStorage.setItem('adminLoginTime', new Date().getTime());
+                closeAdminModal();
+                document.getElementById('adminIndicator').classList.add('show');
+                document.getElementById('adminBadge').style.color = '#fbbf24';
+            } else {
+                errorDiv.textContent = 'Identifiants incorrects';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Déconnexion admin
+        function logoutAdmin() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+                document.getElementById('adminIndicator').classList.remove('show');
+                document.getElementById('adminBadge').style.color = '';
+            }
+        }
+
+        // Support de la touche Entrée
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminSession();
+
+            const passField = document.getElementById('adminPass');
+            const userField = document.getElementById('adminUser');
+
+            if (passField) {
+                passField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') loginAdmin();
+                });
+            }
+
+            if (userField) {
+                userField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') loginAdmin();
+                });
+            }
+
+            // Fermer la modal en cliquant à l'extérieur
+            window.addEventListener('click', function(e) {
+                const modal = document.getElementById('adminModal');
+                if (e.target === modal) {
+                    closeAdminModal();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

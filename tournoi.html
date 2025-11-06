@@ -17,40 +17,21 @@
         </ul>
     </nav>
 
+    <!-- Indicateur de connexion admin -->
+    <div class="admin-indicator" id="adminIndicator">
+        <span>👤 Admin connecté</span>
+        <button class="btn-logout" onclick="logoutAdmin()">Déconnexion</button>
+    </div>
+
     <div class="container xlarge">
         <div class="page-header">
             <h1>Arbre de Tournoi</h1>
             <p>Suivez la progression des équipes en direct</p>
         </div>
 
-        <div class="admin-panel">
-            <div class="admin-toggle">
-                <button class="admin-btn" id="adminLoginBtn" onclick="showLoginForm()">
-                    Mode Administrateur
-                </button>
-            </div>
-
-            <!-- Formulaire d'authentification -->
-            <div class="admin-login" id="adminLogin">
-                <div class="login-form">
-                    <h3>Authentification Administrateur</h3>
-                    <div class="form-group">
-                        <label for="adminUsername">Login:</label>
-                        <input type="text" id="adminUsername" placeholder="Identifiant">
-                    </div>
-                    <div class="form-group">
-                        <label for="adminPassword">Mot de passe:</label>
-                        <input type="password" id="adminPassword" placeholder="Mot de passe">
-                    </div>
-                    <div class="login-actions">
-                        <button class="btn btn-primary" onclick="attemptLogin()">Se connecter</button>
-                        <button class="btn btn-secondary" onclick="cancelLogin()">Annuler</button>
-                    </div>
-                    <div id="loginError" class="error-message"></div>
-                </div>
-            </div>
-
-            <div class="admin-controls" id="adminControls">
+        <div class="admin-panel" id="adminPanel">
+            <h2>Configuration du Tournoi</h2>
+            <div class="admin-controls active">
                 <div class="control-group">
                     <label for="numTeams">Nombre d'équipes:</label>
                     <select id="numTeams" onchange="updateTeamInputs()">
@@ -91,9 +72,6 @@
                     <button class="btn btn-danger" onclick="resetTournament()">
                         🔄 Réinitialiser
                     </button>
-                    <button class="btn btn-warning" onclick="logout()">
-                        🚪 Déconnexion
-                    </button>
                 </div>
             </div>
         </div>
@@ -101,7 +79,7 @@
         <div class="tournament-container">
             <div id="bracketContainer">
                 <div class="info-message">
-                    Cliquez sur "Mode Administrateur" pour créer un nouveau tournoi, ou visualisez le tournoi en cours ci-dessous.
+                    Connectez-vous en tant qu'administrateur pour créer un nouveau tournoi, ou visualisez le tournoi en cours ci-dessous.
                 </div>
             </div>
             <div id="championSection"></div>
@@ -113,87 +91,32 @@
     </footer>
 
     <script>
-        let isAdminMode = false;
-        let isAuthenticated = false;
         let tournamentData = {
             teams: [],
             matches: [],
             rounds: []
         };
 
-        // Credentials d'authentification
-        const ADMIN_USERNAME = 'admin';
-        const ADMIN_PASSWORD = 'caca';
-
-        function showLoginForm() {
-            if (isAuthenticated) {
-                toggleAdminMode();
+        // Vérifier si l'utilisateur est admin
+        function checkAdminSession() {
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            if (isAdmin) {
+                document.getElementById('adminIndicator').classList.add('show');
+                document.getElementById('adminPanel').style.display = 'block';
             } else {
-                document.getElementById('adminLogin').style.display = 'block';
-                document.getElementById('adminUsername').focus();
+                document.getElementById('adminPanel').style.display = 'none';
             }
         }
 
-        function attemptLogin() {
-            const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
-            const errorDiv = document.getElementById('loginError');
-
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                isAuthenticated = true;
-                document.getElementById('adminLogin').style.display = 'none';
-                document.getElementById('adminUsername').value = '';
-                document.getElementById('adminPassword').value = '';
-                errorDiv.textContent = '';
-
-                // Changer le texte du bouton
-                document.getElementById('adminLoginBtn').textContent = 'Mode Administrateur (Connecté)';
-
-                toggleAdminMode();
-            } else {
-                errorDiv.textContent = 'Identifiant ou mot de passe incorrect';
-                errorDiv.style.color = 'red';
-                errorDiv.style.marginTop = '10px';
-            }
-        }
-
-        function cancelLogin() {
-            document.getElementById('adminLogin').style.display = 'none';
-            document.getElementById('adminUsername').value = '';
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('loginError').textContent = '';
-        }
-
-        function logout() {
+        // Déconnexion admin
+        function logoutAdmin() {
             if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                isAuthenticated = false;
-                isAdminMode = false;
-                document.getElementById('adminControls').classList.remove('active');
-                document.getElementById('adminLoginBtn').textContent = 'Mode Administrateur';
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+                document.getElementById('adminIndicator').classList.remove('show');
+                document.getElementById('adminPanel').style.display = 'none';
             }
         }
-
-        // Gestion de la touche Entrée dans le formulaire
-        document.addEventListener('DOMContentLoaded', function() {
-            const passwordField = document.getElementById('adminPassword');
-            const usernameField = document.getElementById('adminUsername');
-
-            if (passwordField) {
-                passwordField.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        attemptLogin();
-                    }
-                });
-            }
-
-            if (usernameField) {
-                usernameField.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        attemptLogin();
-                    }
-                });
-            }
-        });
 
         // Charger un tournoi de démonstration
         function loadDemoTournament() {
@@ -210,25 +133,6 @@
             });
             
             generateBracket();
-        }
-
-        function toggleAdminMode() {
-            if (!isAuthenticated) {
-                alert('Veuillez vous connecter pour accéder au mode administrateur.');
-                return;
-            }
-
-            isAdminMode = !isAdminMode;
-            const controls = document.getElementById('adminControls');
-            controls.classList.toggle('active');
-
-            // Mettre à jour le texte du bouton
-            const btn = document.getElementById('adminLoginBtn');
-            if (isAdminMode) {
-                btn.textContent = 'Fermer le Panneau Admin';
-            } else {
-                btn.textContent = 'Mode Administrateur (Connecté)';
-            }
         }
 
         function updateTeamInputs() {
@@ -329,8 +233,9 @@
         }
 
         function selectWinner(round, matchIndex, teamIndex) {
-            if (!isAuthenticated || !isAdminMode) {
-                alert('Activez le mode administrateur pour modifier les résultats.');
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            if (!isAdmin) {
+                alert('Connectez-vous en tant qu\'administrateur pour modifier les résultats.');
                 return;
             }
 
@@ -410,6 +315,7 @@
 
         // Initialisation
         window.onload = function() {
+            checkAdminSession();
             updateTeamInputs();
             
             // Charger le tournoi sauvegardé s'il existe

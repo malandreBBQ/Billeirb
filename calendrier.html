@@ -17,10 +17,59 @@
         </ul>
     </nav>
 
+    <!-- Indicateur de connexion admin -->
+    <div class="admin-indicator" id="adminIndicator">
+        <span>👤 Admin connecté</span>
+        <button class="btn-logout" onclick="logoutAdmin()">Déconnexion</button>
+    </div>
+
     <div class="container large">
         <div class="page-header animate-on-scroll">
             <h1>Calendrier des Événements</h1>
             <p>Restez informé de tous nos événements à venir</p>
+        </div>
+
+        <!-- Panneau d'administration -->
+        <div class="admin-panel" id="adminPanel">
+            <h2>Gestion des Événements</h2>
+            <div class="admin-controls active">
+                <div class="control-group">
+                    <label for="eventName">Nom de l'événement:</label>
+                    <input type="text" id="eventName" placeholder="Ex: Tournoi d'Automne 2025">
+                </div>
+                <div class="control-group">
+                    <label for="eventDate">Date:</label>
+                    <input type="date" id="eventDate">
+                </div>
+                <div class="control-group">
+                    <label for="eventTime">Heure:</label>
+                    <input type="time" id="eventTime" value="14:00">
+                </div>
+                <div class="control-group">
+                    <label for="eventLocation">Lieu:</label>
+                    <input type="text" id="eventLocation" placeholder="Ex: Stade Central">
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1;">
+                    <label for="eventDescription">Description:</label>
+                    <textarea id="eventDescription" placeholder="Description de l'événement..." rows="3"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="eventParticipants">Nombre d'équipes:</label>
+                    <input type="number" id="eventParticipants" placeholder="16" min="2" max="64">
+                </div>
+                <div class="control-group">
+                    <label for="eventStatus">Statut:</label>
+                    <select id="eventStatus">
+                        <option value="upcoming">À venir</option>
+                        <option value="ongoing">En cours</option>
+                        <option value="completed">Terminé</option>
+                    </select>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="addEvent()">➕ Ajouter l'Événement</button>
+                <button class="btn btn-danger" onclick="clearForm()">🔄 Réinitialiser le formulaire</button>
+            </div>
         </div>
 
         <!-- Compte à rebours -->
@@ -58,8 +107,29 @@
     </footer>
 
     <script>
-        // Base de données des événements
-        const events = [
+        // Vérifier si l'utilisateur est admin
+        function checkAdminSession() {
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            if (isAdmin) {
+                document.getElementById('adminIndicator').classList.add('show');
+                document.getElementById('adminPanel').style.display = 'block';
+            } else {
+                document.getElementById('adminPanel').style.display = 'none';
+            }
+        }
+
+        // Déconnexion admin
+        function logoutAdmin() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+                document.getElementById('adminIndicator').classList.remove('show');
+                document.getElementById('adminPanel').style.display = 'none';
+            }
+        }
+
+        // Base de données des événements par défaut
+        const defaultEvents = [
             {
                 id: 1,
                 name: "Tournoi d'Hiver 2025",
@@ -101,6 +171,79 @@
                 status: "completed"
             }
         ];
+
+        // Charger les événements depuis localStorage ou utiliser les événements par défaut
+        let events = [];
+
+        function loadEvents() {
+            const savedEvents = localStorage.getItem('calendarEvents');
+            if (savedEvents) {
+                events = JSON.parse(savedEvents);
+            } else {
+                events = [...defaultEvents];
+                saveEvents();
+            }
+        }
+
+        function saveEvents() {
+            localStorage.setItem('calendarEvents', JSON.stringify(events));
+        }
+
+        // Fonction pour ajouter un événement
+        function addEvent() {
+            const name = document.getElementById('eventName').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const location = document.getElementById('eventLocation').value;
+            const description = document.getElementById('eventDescription').value;
+            const participants = document.getElementById('eventParticipants').value;
+            const status = document.getElementById('eventStatus').value;
+
+            if (!name || !date || !time || !location || !description) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+
+            const newEvent = {
+                id: Date.now(),
+                name: name,
+                date: date,
+                time: time,
+                location: location,
+                description: description,
+                participants: participants ? `${participants} équipes` : '8 équipes',
+                status: status
+            };
+
+            events.push(newEvent);
+            saveEvents();
+            clearForm();
+            displayEvents();
+            updateCountdown();
+
+            alert('Événement ajouté avec succès !');
+        }
+
+        // Fonction pour supprimer un événement
+        function deleteEvent(eventId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+                events = events.filter(e => e.id !== eventId);
+                saveEvents();
+                displayEvents();
+                updateCountdown();
+            }
+        }
+
+        // Fonction pour réinitialiser le formulaire
+        function clearForm() {
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventTime').value = '14:00';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('eventDescription').value = '';
+            document.getElementById('eventParticipants').value = '';
+            document.getElementById('eventStatus').value = 'upcoming';
+        }
 
         // Fonction pour calculer le compte à rebours
         function updateCountdown() {
@@ -163,6 +306,8 @@
                 new Date(b.date) - new Date(a.date)
             );
 
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+
             sortedEvents.forEach((event, index) => {
                 const eventCard = document.createElement('div');
                 eventCard.className = `event-card animate-on-scroll animate-delay-${Math.min(index + 2, 6)}`;
@@ -172,6 +317,12 @@
                     'ongoing': 'En cours',
                     'completed': 'Terminé'
                 };
+
+                const deleteButton = isAdmin ? `
+                    <button class="btn-delete-event" onclick="deleteEvent(${event.id})" title="Supprimer cet événement">
+                        🗑️ Supprimer
+                    </button>
+                ` : '';
 
                 eventCard.innerHTML = `
                     <div class="event-date-badge">${formatDate(event.date)}</div>
@@ -194,6 +345,7 @@
                     <div class="event-status ${event.status}">
                         ${statusText[event.status]}
                     </div>
+                    ${deleteButton}
                 `;
 
                 eventsGrid.appendChild(eventCard);
@@ -202,6 +354,8 @@
 
         // Initialisation
         window.onload = function() {
+            checkAdminSession();
+            loadEvents();
             updateCountdown();
             displayEvents();
         };
