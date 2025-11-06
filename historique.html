@@ -17,12 +17,12 @@
     </nav>
 
     <div class="container">
-        <div class="page-header">
+        <div class="page-header animate-on-scroll">
             <h1>Historique des Tournois</h1>
             <p>Tous nos champions à travers les années</p>
         </div>
 
-        <div class="filters">
+        <div class="filters animate-on-scroll animate-delay-1">
             <label for="yearFilter">Année:</label>
             <select id="yearFilter">
                 <option value="all">Toutes les années</option>
@@ -41,7 +41,7 @@
             <input type="text" id="searchInput" placeholder="Nom d'équipe...">
         </div>
 
-        <div class="stats-section">
+        <div class="stats-section animate-on-scroll animate-delay-2">
             <h2>Statistiques Globales</h2>
             <div class="stats-grid" id="statsGrid"></div>
         </div>
@@ -234,7 +234,8 @@
 
             filteredTournaments.forEach((tournament, index) => {
                 const card = document.createElement('div');
-                card.className = 'tournament-card';
+                const delay = Math.min(index + 3, 6);
+                card.className = `tournament-card animate-on-scroll animate-delay-${delay}`;
                 
                 card.innerHTML = `
                     <div class="tournament-header">
